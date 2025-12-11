@@ -45,7 +45,7 @@
       <div id="courseList"></div>
     </div>
 
-    <!-- Students List -->
+    <!-- Students -->
     <div id="students" class="page" style="display:none;">
       <h2>Students List by Course</h2>
 
@@ -54,18 +54,6 @@
         <label for="filterMonth">Month:</label>
         <select id="filterMonth">
           <option value="">All</option>
-          <option value="1">January</option>
-          <option value="2">February</option>
-          <option value="3">March</option>
-          <option value="4">April</option>
-          <option value="5">May</option>
-          <option value="6">June</option>
-          <option value="7">July</option>
-          <option value="8">August</option>
-          <option value="9">September</option>
-          <option value="10">October</option>
-          <option value="11">November</option>
-          <option value="12">December</option>
         </select>
 
         <label for="filterYear">Year:</label>
@@ -83,31 +71,14 @@
       <h2>Register Student</h2>
       <input id="regFirstName" placeholder="First Name">
       <input id="regLastName" placeholder="Last Name">
-      <input id="regID" placeholder="ID Number">
+      <input id="regIDNumber" placeholder="ID Number">
       <input id="regPhone" placeholder="Phone Number">
       <select id="regCourseSelect"></select>
       <input id="regStudentPaid" type="number" placeholder="Paid Amount">
 
-      <label for="regDay">Day:</label>
-      <select id="regDay">
-        <option value="">Select Day</option>
-        ${[...Array(31)].map((_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
-      </select>
-
-      <label for="regMonth">Month:</label>
-      <select id="regMonth">
-        <option value="">Select Month</option>
-        ${[...Array(12)].map((_, i) => `<option value="${i+1}">${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i]}</option>`).join('')}
-      </select>
-
-      <label for="regYear">Year:</label>
-      <select id="regYear">
-        <option value="">Select Year</option>
-        ${[...Array(10)].map((_, i) => {
-          const y = new Date().getFullYear() - i;
-          return `<option value="${y}">${y}</option>`;
-        }).join('')}
-      </select>
+      <select id="regDay"></select>
+      <select id="regMonth"></select>
+      <select id="regYear"></select>
 
       <button id="regStudentBtn">Register</button>
     </div>
@@ -115,16 +86,48 @@
 </div>
 
 <script src="js/app.js"></script>
-
 <script>
-  // Populate filter year selector with last 10 years
-  const yearSelect = document.getElementById("filterYear");
-  const currentYear = new Date().getFullYear();
-  for(let i=currentYear; i>=currentYear-10; i--){
+  // Populate days (1-31)
+  const daySelect = document.getElementById("regDay");
+  for(let d=1; d<=31; d++){
     const option = document.createElement("option");
-    option.value = i;
-    option.text = i;
-    yearSelect.add(option);
+    option.value = d;
+    option.text = d;
+    daySelect.add(option);
+  }
+
+  // Populate months
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthSelect = document.getElementById("regMonth");
+  months.forEach((m,i)=>{
+    const option = document.createElement("option");
+    option.value = i+1;
+    option.text = m;
+    monthSelect.add(option);
+  });
+
+  const filterMonth = document.getElementById("filterMonth");
+  months.forEach((m,i)=>{
+    const option = document.createElement("option");
+    option.value = i+1;
+    option.text = m;
+    filterMonth.add(option);
+  });
+
+  // Populate years (last 10)
+  const currentYear = new Date().getFullYear();
+  const yearSelect = document.getElementById("regYear");
+  const filterYear = document.getElementById("filterYear");
+  for(let i=currentYear; i>=currentYear-10; i--){
+    const option1 = document.createElement("option");
+    option1.value = i;
+    option1.text = i;
+    yearSelect.add(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = i;
+    option2.text = i;
+    filterYear.add(option2);
   }
 </script>
 </body>

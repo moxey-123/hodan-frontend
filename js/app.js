@@ -96,34 +96,42 @@ async function deleteCourse(id){
 document.getElementById("regStudentBtn").onclick=async function(){
   const firstName = document.getElementById("regFirstName").value;
   const lastName = document.getElementById("regLastName").value;
-  const idNumber = document.getElementById("regID").value;
+  const idNumber = document.getElementById("regIDNumber").value;
   const phone = document.getElementById("regPhone").value;
   const courseId = document.getElementById("regCourseSelect").value;
-  const feePaid = document.getElementById("regStudentPaid").value;
+  const paid = document.getElementById("regStudentPaid").value;
   const day = document.getElementById("regDay").value;
   const month = document.getElementById("regMonth").value;
   const year = document.getElementById("regYear").value;
 
-  if(!firstName||!lastName||!idNumber||!phone||!courseId||!day||!month||!year)
-    return alert("Fill all fields!");
+  if(!firstName || !lastName || !idNumber || !phone || !courseId || !day || !month || !year){
+    return alert("Fill all fields to register a student");
+  }
 
   await fetchWithAuth(API+"/students",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({firstName,lastName,idNumber,phone,course:courseId,feePaid:Number(feePaid)||0,regDay:day,regMonth:month,regYear:year})
+    body:JSON.stringify({
+      firstName,
+      lastName,
+      idNumber,
+      phone,
+      course:courseId,
+      feePaid:Number(paid)||0,
+      regDate:{day:Number(day),month:Number(month),year:Number(year)}
+    })
   });
 
-  // Clear form
   document.getElementById("regFirstName").value="";
   document.getElementById("regLastName").value="";
-  document.getElementById("regID").value="";
+  document.getElementById("regIDNumber").value="";
   document.getElementById("regPhone").value="";
   document.getElementById("regStudentPaid").value="";
   document.getElementById("regDay").value="";
   document.getElementById("regMonth").value="";
   document.getElementById("regYear").value="";
-
   alert("Student registered successfully!");
+  loadStudentsByCourse(); // refresh student list immediately
 };
 
 // -------- LOAD COURSES DROPDOWN --------
@@ -134,72 +142,83 @@ async function loadCoursesDropdownRegister(){
   courses.forEach(c=>sel.innerHTML+=`<option value="${c._id}">${c.name}</option>`);
 }
 
-// -------- STUDENTS CRUD + FILTER --------
-async function loadStudentsByCourse(){
+// -------- STUDENTS CRUD & FILTER --------
+async function loadStudentsByCourse(monthFilter="", yearFilter=""){
   const courses=await fetchWithAuth(API+"/courses").then(r=>r.json());
-  let students=await fetchWithAuth(API+"/students").then(r=>r.json());
-
-  const filterMonth = document.getElementById("filterMonth").value;
-  const filterYear = document.getElementById("filterYear").value;
-
-  if(filterMonth) students = students.filter(s => s.regMonth == filterMonth);
-  if(filterYear) students = students.filter(s => s.regYear == filterYear);
-
+  const students=await fetchWithAuth(API+"/students").then(r=>r.json());
   let html="";
+
   courses.forEach(c=>{
     html+=`<h3>${c.name} (Fee: ${c.fee})</h3>`;
-    html+="<table><tr><th>First Name</th><th>Last Name</th><th>ID</th><th>Phone</th><th>Paid</th><th>Date</th><th>Actions</th></tr>";
-    students.filter(s=>s.course?._id===c._id).forEach(s=>{
+    html+="<table><tr><th>Student Name</th><th>ID</th><th>Phone</th><th>Paid</th><th>Date</th><th>Actions</th></tr>";
+
+    students
+      .filter(s=>s.course?._id===c._id)
+      .filter(s=>{
+        if(monthFilter && s.regDate.month!=monthFilter) return false;
+        if(yearFilter && s.regDate.year!=yearFilter) return false;
+        return true;
+      })
+      .forEach(s=>{
       html+=`<tr>
-        <td>${s.firstName}</td>
-        <td>${s.lastName}</td>
+        <td>${s.firstName} ${s.lastName}</td>
         <td>${s.idNumber}</td>
         <td>${s.phone}</td>
         <td>${s.feePaid}</td>
-        <td>${s.regDay}-${s.regMonth}-${s.regYear}</td>
+        <td>${s.regDate.day}/${s.regDate.month}/${s.regDate.year}</td>
         <td>
-          <button class="edit" onclick="editStudent('${s._id}','${s.firstName}','${s.lastName}','${s.idNumber}','${s.phone}',${s.feePaid},'${s.course._id}',${s.regDay},${s.regMonth},${s.regYear})">Edit</button>
+          <button class="edit" onclick="editStudent('${s._id}','${s.firstName}','${s.lastName}','${s.idNumber}','${s.phone}',${s.feePaid},'${s.course._id}','${s.regDate.day}','${s.regDate.month}','${s.regDate.year}')">Edit</button>
           <button class="delete" onclick="deleteStudent('${s._id}')">Delete</button>
         </td>
       </tr>`;
     });
+
     html+="</table>";
   });
+
   document.getElementById("studentList").innerHTML=html;
 }
 
-// -------- EDIT STUDENT --------
-function editStudent(id,firstName,lastName,idNumber,phone,feePaid,courseId,day,month,year){
-  const newFirst = prompt("First Name:",firstName);
-  const newLast = prompt("Last Name:",lastName);
-  const newID = prompt("ID Number:",idNumber);
-  const newPhone = prompt("Phone Number:",phone);
-  const newFee = prompt("Fee Paid:",feePaid);
-  const newDay = prompt("Day:",day);
-  const newMonth = prompt("Month:",month);
-  const newYear = prompt("Year:",year);
-
-  if(!newFirst||!newLast||!newID||!newPhone||!newFee||!newDay||!newMonth||!newYear) return;
+// Edit & Delete Students
+function editStudent(id, firstName, lastName, idNumber, phone, feePaid, courseId, day, month, year){
+  const newFirstName = prompt("First Name:", firstName);
+  const newLastName = prompt("Last Name:", lastName);
+  const newID = prompt("ID Number:", idNumber);
+  const newPhone = prompt("Phone:", phone);
+  const newFee = prompt("Fee Paid:", feePaid);
+  const newDay = prompt("Day:", day);
+  const newMonth = prompt("Month (1-12):", month);
+  const newYear = prompt("Year:", year);
+  if(!newFirstName || !newLastName || !newID || !newPhone || !newDay || !newMonth || !newYear) return;
 
   fetchWithAuth(`${API}/students/${id}`,{
     method:"PUT",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
-      firstName:newFirst,lastName:newLast,idNumber:newID,phone:newPhone,
-      feePaid:Number(newFee),course:courseId,regDay:newDay,regMonth:newMonth,regYear:newYear
+      firstName:newFirstName,
+      lastName:newLastName,
+      idNumber:newID,
+      phone:newPhone,
+      feePaid:Number(newFee),
+      course:courseId,
+      regDate:{day:Number(newDay), month:Number(newMonth), year:Number(newYear)}
     })
   }).then(()=>loadStudentsByCourse());
 }
 
-// -------- DELETE STUDENT --------
 async function deleteStudent(id){
   if(!confirm("Are you sure to delete this student?")) return;
   await fetchWithAuth(`${API}/students/${id}`,{method:"DELETE"});
   loadStudentsByCourse();
 }
 
-// -------- FILTER BUTTONS --------
-document.getElementById("applyFilterBtn").onclick = loadStudentsByCourse;
+// -------- FILTER HANDLERS --------
+document.getElementById("applyFilterBtn").onclick = () => {
+  const month = document.getElementById("filterMonth").value;
+  const year = document.getElementById("filterYear").value;
+  loadStudentsByCourse(month, year);
+};
+
 document.getElementById("clearFilterBtn").onclick = () => {
   document.getElementById("filterMonth").value="";
   document.getElementById("filterYear").value="";
