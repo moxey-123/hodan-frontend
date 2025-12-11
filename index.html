@@ -25,6 +25,7 @@
   </div>
 
   <div class="main">
+    <!-- Dashboard -->
     <div id="dashboard" class="page">
       <h1 id="dashboardTitle">NIMCO HODAN TRAINING COLLEGE</h1>
       <div class="stats">
@@ -33,6 +34,7 @@
       </div>
     </div>
 
+    <!-- Courses -->
     <div id="courses" class="page" style="display:none;">
       <h2>Courses</h2>
       <div class="courseForm">
@@ -43,6 +45,7 @@
       <div id="courseList"></div>
     </div>
 
+    <!-- Students List -->
     <div id="students" class="page" style="display:none;">
       <h2>Students List by Course</h2>
 
@@ -75,19 +78,46 @@
       <div id="studentList"></div>
     </div>
 
+    <!-- Register Student -->
     <div id="register" class="page" style="display:none;">
       <h2>Register Student</h2>
-      <input id="regStudentName" placeholder="Student Name">
+      <input id="regFirstName" placeholder="First Name">
+      <input id="regLastName" placeholder="Last Name">
+      <input id="regID" placeholder="ID Number">
+      <input id="regPhone" placeholder="Phone Number">
       <select id="regCourseSelect"></select>
       <input id="regStudentPaid" type="number" placeholder="Paid Amount">
+
+      <label for="regDay">Day:</label>
+      <select id="regDay">
+        <option value="">Select Day</option>
+        ${[...Array(31)].map((_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
+      </select>
+
+      <label for="regMonth">Month:</label>
+      <select id="regMonth">
+        <option value="">Select Month</option>
+        ${[...Array(12)].map((_, i) => `<option value="${i+1}">${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i]}</option>`).join('')}
+      </select>
+
+      <label for="regYear">Year:</label>
+      <select id="regYear">
+        <option value="">Select Year</option>
+        ${[...Array(10)].map((_, i) => {
+          const y = new Date().getFullYear() - i;
+          return `<option value="${y}">${y}</option>`;
+        }).join('')}
+      </select>
+
       <button id="regStudentBtn">Register</button>
     </div>
   </div>
 </div>
 
 <script src="js/app.js"></script>
+
 <script>
-  // Populate year selector with last 10 years
+  // Populate filter year selector with last 10 years
   const yearSelect = document.getElementById("filterYear");
   const currentYear = new Date().getFullYear();
   for(let i=currentYear; i>=currentYear-10; i--){
