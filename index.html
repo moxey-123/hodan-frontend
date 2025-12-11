@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hodan Training College Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<script>
+  if (!localStorage.getItem("adminToken")) {
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="container">
+  <div class="sidebar">
+    <h2>Hodan 22</h2>
+    <a href="#" data-page="dashboard" class="active">Dashboard</a>
+    <a href="#" data-page="courses">Courses</a>
+    <a href="#" data-page="students">Students</a>
+    <a href="#" data-page="register">Register</a>
+    <a href="#" id="logoutBtn">Logout</a>
+  </div>
+
+  <div class="main">
+    <div id="dashboard" class="page">
+      <h1 id="dashboardTitle">NIMCO HODAN TRAINING COLLEGE</h1>
+      <div class="stats">
+        <div class="card"><h3>Total Courses</h3><p id="totalCourses">0</p></div>
+        <div class="card"><h3>Total Students</h3><p id="totalStudents">0</p></div>
+      </div>
+    </div>
+
+    <div id="courses" class="page" style="display:none;">
+      <h2>Courses</h2>
+      <div class="courseForm">
+        <input id="courseName" placeholder="Course Name">
+        <input id="courseFee" type="number" placeholder="Fee">
+        <button id="addCourseBtn">Add Course</button>
+      </div>
+      <div id="courseList"></div>
+    </div>
+
+    <div id="students" class="page" style="display:none;">
+      <h2>Students List by Course</h2>
+      <div id="studentList"></div>
+    </div>
+
+    <div id="register" class="page" style="display:none;">
+      <h2>Register Student</h2>
+      <input id="regStudentName" placeholder="Student Name">
+      <select id="regCourseSelect"></select>
+      <input id="regStudentPaid" type="number" placeholder="Paid Amount">
+      <button id="regStudentBtn">Register</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
