@@ -1,11 +1,3 @@
-// ---- FORCE LOGIN BEFORE ANYTHING ----
-if (window.location.pathname.includes("index.html") || window.location.pathname === "/" || window.location.pathname === "") {
-    const loggedToken = localStorage.getItem("adminToken");
-    if (!loggedToken) {
-        window.location.href = "login.html"; // Always go to login first
-    }
-}
-
 const API = "https://hodan12.onrender.com"; // ✅ Deployed backend
 
 // -------- PAGE SWITCHING --------
