@@ -93,7 +93,8 @@ async function deleteCourse(id){
 }
 
 // -------- REGISTER STUDENT --------
-document.getElementById("regStudentBtn").onclick=async function(){
+document.getElementById("regStudentBtn").onclick = async function(){
+  const admissionNumber = document.getElementById("regAdmissionNumber").value; // NEW
   const firstName = document.getElementById("regFirstName").value;
   const lastName = document.getElementById("regLastName").value;
   const idNumber = document.getElementById("regIDNumber").value;
@@ -104,7 +105,7 @@ document.getElementById("regStudentBtn").onclick=async function(){
   const month = document.getElementById("regMonth").value;
   const year = document.getElementById("regYear").value;
 
-  if(!firstName || !lastName || !idNumber || !phone || !courseId || !day || !month || !year){
+  if(!admissionNumber || !firstName || !lastName || !idNumber || !phone || !courseId || !day || !month || !year){
     return alert("Fill all fields to register a student");
   }
 
@@ -112,6 +113,7 @@ document.getElementById("regStudentBtn").onclick=async function(){
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
+      admissionNumber, // NEW
       firstName,
       lastName,
       idNumber,
@@ -122,6 +124,7 @@ document.getElementById("regStudentBtn").onclick=async function(){
     })
   });
 
+  document.getElementById("regAdmissionNumber").value=""; // NEW
   document.getElementById("regFirstName").value="";
   document.getElementById("regLastName").value="";
   document.getElementById("regIDNumber").value="";
