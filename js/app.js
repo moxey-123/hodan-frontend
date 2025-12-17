@@ -153,7 +153,7 @@ async function loadStudentsByCourse(monthFilter="", yearFilter=""){
 
   courses.forEach(c=>{
     html+=`<h3>${c.name} (Fee: ${c.fee})</h3>`;
-    html+="<table><tr><th>Student Name</th><th>ID</th><th>Phone</th><th>Paid</th><th>Date</th><th>Actions</th></tr>";
+    html+="<table><tr><th>Student Name</th><th>Admission No</th><th>ID</th><th>Phone</th><th>Paid</th><th>Date</th><th>Actions</th></tr>";
 
     students
       .filter(s=>s.course?._id===c._id)
@@ -165,6 +165,7 @@ async function loadStudentsByCourse(monthFilter="", yearFilter=""){
       .forEach(s=>{
       html+=`<tr>
         <td>${s.firstName} ${s.lastName}</td>
+        <td>${s.admissionNumber || ""}</td>
         <td>${s.idNumber}</td>
         <td>${s.phone}</td>
         <td>${s.feePaid}</td>
