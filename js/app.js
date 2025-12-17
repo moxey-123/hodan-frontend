@@ -94,7 +94,7 @@ async function deleteCourse(id){
 
 // -------- REGISTER STUDENT --------
 document.getElementById("regStudentBtn").onclick = async function(){
-  const admissionNumber = document.getElementById("regAdmissionNumber").value; // NEW
+  const admissionNumber = document.getElementById("regAdmissionNumber").value;
   const firstName = document.getElementById("regFirstName").value;
   const lastName = document.getElementById("regLastName").value;
   const idNumber = document.getElementById("regIDNumber").value;
@@ -113,7 +113,7 @@ document.getElementById("regStudentBtn").onclick = async function(){
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
-      admissionNumber, // NEW
+      admissionNumber,
       firstName,
       lastName,
       idNumber,
@@ -124,7 +124,7 @@ document.getElementById("regStudentBtn").onclick = async function(){
     })
   });
 
-  document.getElementById("regAdmissionNumber").value=""; // NEW
+  document.getElementById("regAdmissionNumber").value="";
   document.getElementById("regFirstName").value="";
   document.getElementById("regLastName").value="";
   document.getElementById("regIDNumber").value="";
@@ -134,7 +134,7 @@ document.getElementById("regStudentBtn").onclick = async function(){
   document.getElementById("regMonth").value="";
   document.getElementById("regYear").value="";
   alert("Student registered successfully!");
-  loadStudentsByCourse(); // refresh student list immediately
+  loadStudentsByCourse();
 };
 
 // -------- LOAD COURSES DROPDOWN --------

@@ -22,6 +22,7 @@
     <a href="#" data-page="students">Students</a>
     <a href="#" data-page="register">Register</a>
     <a href="#" id="logoutBtn">Logout</a>
+    <button id="themeToggleBtn">Toggle Dark/Light</button>
   </div>
 
   <div class="main">
@@ -49,7 +50,6 @@
     <div id="students" class="page" style="display:none;">
       <h2>Students List by Course</h2>
 
-      <!-- Month/Year Filter -->
       <div class="studentFilter" style="margin-bottom:1rem;">
         <label for="filterMonth">Month:</label>
         <select id="filterMonth">
@@ -69,10 +69,7 @@
     <!-- Register Student -->
     <div id="register" class="page" style="display:none;">
       <h2>Register Student</h2>
-      
-      <!-- Added admission number input -->
       <input id="regAdmissionNumber" placeholder="Admission Number (e.g. IT-400/25)">
-      
       <input id="regFirstName" placeholder="First Name">
       <input id="regLastName" placeholder="Last Name">
       <input id="regIDNumber" placeholder="ID Number">
@@ -132,6 +129,18 @@
     option2.value = i;
     option2.text = i;
     filterYear.add(option2);
+  }
+
+  // Dark/Light Toggle
+  const themeBtn = document.getElementById("themeToggleBtn");
+  themeBtn.onclick = () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+  };
+
+  // Load saved theme
+  if(localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark-mode");
   }
 </script>
 </body>
